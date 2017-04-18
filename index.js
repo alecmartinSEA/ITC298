@@ -28,14 +28,7 @@ function serveStaticFile(res, path, contentType, responseCode){
         case '/about' :
                       serveStaticFile(res, '/public/about.html', 'text/html');
                       break;
-        /*case '/add' :
-          console.log(records.getAll()); 
-          let grab = records.addRecords(params.title);
-          res.writeHead(200, {'content-Type' : 'text/plain'});
-          res.end('You Added ' + params.title +  JSON.stringify(grab));
-          console.log(records.getAll()); 
-          break;
-        */
+       
         case '/search' :
           let found = records.get(params.title);
           if (found) {
@@ -52,9 +45,13 @@ function serveStaticFile(res, path, contentType, responseCode){
           of items. For example "[BOOK TITLE] removed. N total books"*/
           case '/delete' :
           console.log(records.getAll()); 
-          let len = records.delete(params.title);
+          //delete the record with param of title
+          let result = records.delete(params.title);
+          console.log(result.total);
           res.writeHead(200, {'content-Type' : 'text/plain'});
-          res.end('you deleted ' + params.title + "\n" + 'new length ' + records.length + records.count);
+          //you deleted the name 'title' your new length returns records.length?
+          res.end('you deleted ' + params.title + "\n" + 'new length ' + result.total);
+
           console.log(records.getAll());       
           break;
 
@@ -65,4 +62,4 @@ function serveStaticFile(res, path, contentType, responseCode){
           break;
       }
     }).listen(3000);
-    console.log('Server started on localhost:3000; press Ctrl-C to terminate....');
+console.log('Server started on localhost:3000; press Ctrl-C to terminate....');
