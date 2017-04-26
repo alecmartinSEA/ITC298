@@ -1,34 +1,80 @@
-var http = require('http'), fs = require('fs'), qs= require("querystring"), records = require('./lib/records');  
+var express = require('express');
+var app = express();
+var bodyParser = require('body-parser');
+var path = require('path');
+var records = require('./lib/records');
+app.set('port', process.env.PORT || 3000);
+app.use(express.static(__dirname + '/public')); // set location for static files
+app.use(require("body-parser").urlencoded({extended: true})); // parse form submissions
+
+//for views
+let handlebars =  require("express-handlebars");
+app.engine(".html", handlebars({extname: '.html'}));
+app.set("view engine", ".html");
+
+//main
+app.get('/', function(req,res) {
 
 
-function serveStaticFile(res, path, contentType, responseCode){
-    if(!responseCode) responseCode= 200;
-      fs.readFile(__dirname + path, function(err,data) {
-        if(err) {
-                  res.writeHead(500, {'Content-Type': 'text/plain' });
-                  res.end('500- Internal Error');
-      } else {
-          res.writeHead(responseCode, {'Content-Type' : contentType});
-          res.end(data);
-      
-        }
+  
+   res.sendFile(__dirname + '/public/home.html'); 
 
-      });
-    }
-    
-    http.createServer(function(req,res){
-      var url = req.url.split("?")
-      //console.log(params)
-      var params =  qs.parse(url[1]); 
-      var path = url[0].toLowerCase(); 
-      switch(path) {
-        case '':
-                serveStaticFile(res, '/public/home.html', 'text/html');
-                break;
-        case '/about' :
-                      serveStaticFile(res, '/public/about.html', 'text/html');
-                      break;
-       
+
+  /*res.type('text/plain');
+  res.send('Groovy vinyls'); */
+});
+
+
+app.post('/get', function(req,res) {
+  
+  var found = records.get(req.body.title); 
+  res.render('detail', {found: found});
+  
+});
+
+
+
+
+
+app.get('/delete', function(req,res, found) {
+  console.log(req.query.title)
+  var found = records.delete(req.query.title);
+  console.log(found)
+  res.render('delete', {title: req.query.title, found: found.total} );
+  
+});
+
+app.get('/about', function(req,res) {
+  res.type('text/plain');
+  res.send('About Groovy vinyls');
+});
+
+
+//errors should be last or else will fail
+app.use(function(req,res) {
+  res.type("text/plain");
+  res.status(404);
+  res.send('404 - Not FOUND');
+});
+
+app.use(function(req,res) {
+  res.type("text/plain");
+  res.status(505);
+  res.send('505 - Server Error');
+});
+
+
+
+app.listen(app.get('port'), function(){
+  console.log('Express started on http://localhost:' + app.get('port') + ' ; press CTRL-c to terminate');
+});
+
+
+
+
+
+
+       /*
         case '/search' :
           let found = records.get(params.title);
           if (found) {
@@ -42,7 +88,7 @@ function serveStaticFile(res, path, contentType, responseCode){
           }          
           break;
           /*remove the requested item from your list, if found, and display the new total # 
-          of items. For example "[BOOK TITLE] removed. N total books"*/
+          of items. For example "[BOOK TITLE] removed. N total books" 
           case '/delete' :
           console.log(records.getAll()); 
           //delete the record with param of title
@@ -62,4 +108,4 @@ function serveStaticFile(res, path, contentType, responseCode){
           break;
       }
     }).listen(3000);
-console.log('Server started on localhost:3000; press Ctrl-C to terminate....');
+console.log('Server started on localhost:3000; press Ctrl-C to terminate....'); */

@@ -18,5 +18,10 @@
   "bugs": {
     "url": "https://github.com/alecmartinSEA/ITC298/issues"
   },
-  "homepage": "https://github.com/alecmartinSEA/ITC298#readme"
+  "homepage": "https://github.com/alecmartinSEA/ITC298#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "express-handlebars": "^3.0.0"
+  }
 }
