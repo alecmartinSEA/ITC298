@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	
+		<h2>Details for {{found.title}}</h2>
+	{{#if found}}
+	    <li>Title: {{ found.title }}
+	    <li>Artist: {{ found.artist }}
+	    <li>Genre: {{ found.genre }} </br>
+	    <a href="/delete?title={{found.title}}">Delete this item</a>
+ 	{{else}}
+    	<h1>not found</h1>
+  	{{/if}} 
+    
+  
+
+</body>
