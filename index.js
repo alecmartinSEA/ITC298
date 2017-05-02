@@ -35,12 +35,12 @@ app.post('/get', function(req,res) {
 
 
 
-
 app.get('/delete', function(req,res, found) {
   console.log(req.query.title)
   var found = records.delete(req.query.title);
   console.log(found)
   res.render('delete', {title: req.query.title, found: found.total} );
+
   
 });
 
@@ -48,6 +48,8 @@ app.get('/about', function(req,res) {
   res.type('text/plain');
   res.send('About Groovy vinyls');
 });
+
+
 
 
 //errors should be last or else will fail
