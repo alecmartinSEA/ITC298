@@ -3,16 +3,23 @@
 <head>
 </head>
 <body>
-	
-		<h2>Details for {{found.title}}</h2>
+	<nav>
+		<a href="/">Home</a>
+		<a href="about.html">about</a>
+	</nav>
+	<h2>Details for {{found.title}}</h2>
+	<h4>Detail</h4>
 	{{#if found}}
 	    <li>Title: {{ found.title }}
 	    <li>Artist: {{ found.artist }}
 	    <li>Genre: {{ found.genre }} </br>
 	    <a href="/delete?title={{found.title}}">Delete this item</a>
  	{{else}}
-    	<h1>not found</h1>
+    	<h1>Did not find {{found.title}}</h1>
   	{{/if}} 
+  	<footer>
+	<p>&#169; Alec Martin 2017</p>
+	</footer>
     
   
 

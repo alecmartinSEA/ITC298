@@ -17,11 +17,19 @@ app.get('/', function(req,res) {
 
 
   
-   res.sendFile(__dirname + '/public/home.html'); 
+   res.render('master', {records:records.getAll()}); 
 
 
-  /*res.type('text/plain');
-  res.send('Groovy vinyls'); */
+  
+});
+
+app.get('/detail/:title', function(req,res){
+  res.type('text.html');
+  var found = records.get(req.params.title);
+  if(!found) {
+    found = {title: req.params.title,};
+  }
+  res.render('detail', {found: found});
 });
 
 
@@ -76,38 +84,4 @@ app.listen(app.get('port'), function(){
 
 
 
-       /*
-        case '/search' :
-          let found = records.get(params.title);
-          if (found) {
-          console.log(records.get(params.title))
-          res.writeHead(200, {'content-Type' : 'text/plain'});
-          res.end('Results for ' + params.title + "\n" + JSON.stringify(found)); 
-          }
-          else {
-          res.writeHead(200, {'content-Type' : 'text/plain'});
-          res.end('No results'); 
-          }          
-          break;
-          /*remove the requested item from your list, if found, and display the new total # 
-          of items. For example "[BOOK TITLE] removed. N total books" 
-          case '/delete' :
-          console.log(records.getAll()); 
-          //delete the record with param of title
-          let result = records.delete(params.title);
-          console.log(result.total);
-          res.writeHead(200, {'content-Type' : 'text/plain'});
-          //you deleted the name 'title' your new length returns records.length?
-          res.end('you deleted ' + params.title + "\n" + 'new length ' + result.total);
-
-          console.log(records.getAll());       
-          break;
-
-
-
-        default:
-          serveStaticFile(res, '/public/404.html', 'text/html',404);
-          break;
-      }
-    }).listen(3000);
-console.log('Server started on localhost:3000; press Ctrl-C to terminate....'); */
+       
