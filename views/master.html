@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<nav>
+		<a href="/">Home</a>
+		<a href="about.html">about</a>
+	</nav>
+	<h1>Welcome to groovy vinyls</h2>
+	<h4>home</h4>
+	<p>this app will allow you to  Create. Update or Delete an item. </br>
+	   View all items. Filter items. Search for items. 
+	</p>
+	<h3>Search vinyls</h3>
+	<form method='post' action='/get'>
+	<label for="title">Title</title>
+  	<input type="text" name="title" required maxlength="20">
+  	<input type="submit" value="Submit">
+  	</form>
+  <br>
+  <h3>List of vinyls</h3>
+ 
+{{#each records}}
+  <ul>
+  	<li><a href="/detail/{{title}}">{{title}}</a></br></li>
+  </ul>
+  
+{{/each}}
+</ul>
+  <footer>
+  <p>&#169; Alec Martin 2017</p>
+</footer>
+</body>
+</html>
