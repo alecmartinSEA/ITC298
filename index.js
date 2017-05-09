@@ -25,18 +25,19 @@ app.get('/', function(req,res) {
 
 app.get('/detail/:title', function(req,res){
   res.type('text.html');
+  
   var found = records.get(req.params.title);
   if(!found) {
     found = {title: req.params.title,};
   }
-  res.render('detail', {found: found});
+  res.render('detail', {found: found, title: req.params.title});
 });
 
 
 app.post('/get', function(req,res) {
-  
+ 
   var found = records.get(req.body.title); 
-  res.render('detail', {found: found});
+  res.render('detail', {found: found, title: req.body.title});
   
 });
 
