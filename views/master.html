@@ -15,7 +15,7 @@
 	<h3>Search vinyls</h3>
 	<form method='post' action='/get'>
 	<label for="title">Title</title>
-  	<input type="text" name="title" required maxlength="20">
+  	<input type="text" name="title" required maxlength="40">
   	<input type="submit" value="Submit">
   	</form>
   <br>
@@ -23,7 +23,7 @@
  
 {{#each records}}
   <ul>
-  	<li><a href="/detail/{{title}}">{{title}}</a></br></li>
+  	<li><a href="/get?title={{title}}">{{title}}</a></br></li>
   </ul>
   
 {{/each}}

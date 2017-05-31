@@ -5,7 +5,7 @@ var options = { server: {
 	socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } 
 	} 
 };
-mongoose.connect(credentials.mongo.development.connectionString, options);
+mongoose.connect(credentials.connectionString, options);
 var conn = mongoose.connection;
 conn.on('error',console.error.bind(console, 'connection error:'));
 
@@ -16,4 +16,4 @@ var recordSchema = mongoose.Schema({
 	genre: String
 
 });
-module.exports = mongoose.model('Record', recordSchema);
+module.exports = mongoose.model('records', recordSchema); //change to lower case collection in Mlab and here
