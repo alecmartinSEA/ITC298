@@ -1,7 +1,7 @@
 var http = require('http');
 var express = require('express');
 var app = express();
-
+var cors = require('cors')
 var bodyParser = require('body-parser');
 var path = require('path');
 var records = require('./lib/records');
@@ -13,6 +13,8 @@ app.use(require("body-parser").urlencoded({extended: true})); // parse form subm
 app.use((err, req, res, next) => {
   console.log(err)
 })
+
+app.use('/api', require('cors')()); // set Access-Control-Allow-Origin header for api route
 
 //for views
 let handlebars =  require("express-handlebars");
@@ -97,21 +99,33 @@ app.get('/api/v1/record/:title', (req,res,next) => {
   console.log(title);
   Record.findOne({title: title}, (err, result) => {
     if (err || !result) return next(err);
-    res.json( result );
+    if (result) {
+    res.json(result);
+  } else {
+  return res.status(500).send('no title');
+  }
   });
 });
 
 app.get('/api/v1/records', (req,res,next) => {
   Record.find((err,result) => {
     if (err || !result) return next(err);
+    if (result) {
     res.json(result);
+  }else {
+    return res.status(500).send('nothing in database');
+  }
   });
 });
 
 app.get('/api/v1/delete/:title', (req,res,next) => {
   Record.remove({"title":req.params.title}, (err,result) => {
     if (err) return next(err);
+    if(deleted) {
     res.json({"deleted": result.result.n});
+  }else {
+    return res.status(500).send('Did not delete');
+  }
   });
 });
 
@@ -119,7 +133,11 @@ app.get('/api/v1/add/:title/:artist/:genre', (req,res,next) => {
   let title =req.params.title;
   Record.update({title: title}, {title:title, artist: req.params.artist, genre: req.params.genre}, {upsert: true}, (err, result) => {
     if (err) return next(err);
+    if (updated) {
     res.json({updated: result.nModified});
+  }else {
+    return res.status(500).send('did not add');
+  }
   });
 });
 
