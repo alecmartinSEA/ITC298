@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var records = require('./lib/records');
 var Record = require("./models/Record");
+app.use('/api', require('cors')());
 
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public')); // set location for static files
@@ -14,7 +15,7 @@ app.use((err, req, res, next) => {
   console.log(err)
 })
 
-app.use('/api', require('cors')()); // set Access-Control-Allow-Origin header for api route
+
 
 //for views
 let handlebars =  require("express-handlebars");
@@ -47,28 +48,24 @@ app.get('/', (req,res) => {
 });*/
 
 
-
-
-
-
-
-app.post('/get', (req,res, next) => {
-    Record.findOne({ title:req.body.title }, (err, record) => {
-
-        if (err) return next(err);
-        res.type('text/html');
-        res.render('detail', {found: record, title:req.body.title }); 
-        console.log(found);
-    });
-});
-
-app.get('/get', (req,res) => {
-   Record.findOne ({ title:req.query.title}, (err, record) => {
+app.get('/get', (req,res,next) => {
+   Record.findOne({ title:req.query.title}, (err, record) => {
        if (err) return next(err); 
        res.type('text/html');
        res.render('detail',  {found: record, title:req.query.title }); 
    });  
 });
+
+app.post('/get', (req,res, next) => {
+    Record.findOne({ title:req.body.title }, (err, record) => {
+      if (err) return next(err);
+        res.type('text/html');
+        res.render('detail', {found: record, title:req.body.title }); 
+        
+    });
+});
+
+
 
 
 app.get('/delete', (req,res) => {
@@ -92,7 +89,7 @@ app.get('/about', function(req,res) {
   res.type('text/plain');
   res.send('About Groovy vinyls');
 });
-
+/*
 //apis 
 app.get('/api/v1/record/:title', (req,res,next) => {
   let title =req.params.title;
@@ -140,7 +137,7 @@ app.get('/api/v1/add/:title/:artist/:genre', (req,res,next) => {
   }
   });
 });
-
+*/
 
 
 
