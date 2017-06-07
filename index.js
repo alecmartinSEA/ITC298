@@ -27,10 +27,9 @@ app.set("view engine", ".html");
 
 app.get('/', (req,res) => {
     Record.find((err,records) => {
-      console.log(err)
-      console.log(records)
+      
         if (err) return next(err);
-        res.render('master', {records: records});    
+        res.render('home', {records: JSON.stringify(records)});    
     });
 });
 
@@ -89,55 +88,47 @@ app.get('/about', function(req,res) {
   res.type('text/plain');
   res.send('About Groovy vinyls');
 });
-/*
+
 //apis 
 app.get('/api/v1/record/:title', (req,res,next) => {
   let title =req.params.title;
-  console.log(title);
+  
   Record.findOne({title: title}, (err, result) => {
     if (err || !result) return next(err);
-    if (result) {
-    res.json(result);
-  } else {
-  return res.status(500).send('no title');
-  }
+      res.json(result);
   });
 });
 
 app.get('/api/v1/records', (req,res,next) => {
+
   Record.find((err,result) => {
     if (err || !result) return next(err);
-    if (result) {
+   
     res.json(result);
-  }else {
-    return res.status(500).send('nothing in database');
-  }
   });
 });
 
-app.get('/api/v1/delete/:title', (req,res,next) => {
-  Record.remove({"title":req.params.title}, (err,result) => {
-    if (err) return next(err);
-    if(deleted) {
-    res.json({"deleted": result.result.n});
-  }else {
-    return res.status(500).send('Did not delete');
-  }
-  });
+
+
+app.get('/api/v1/add/:title/:artist/:genre', (req,res, next) => {
+    // find & update existing item, or add new 
+    let title = req.params.title;
+    Record.update({ title: title}, {title:title, artist: req.params.artist, genre: req.params.genre }, {upsert: true }, (err, result) => {
+        if (err) return next(err);
+        
+        // nModified = 0 for new item, = 1+ for updated item 
+        res.json({updated: result.nModified});
+      });
 });
 
-app.get('/api/v1/add/:title/:artist/:genre', (req,res,next) => {
-  let title =req.params.title;
-  Record.update({title: title}, {title:title, artist: req.params.artist, genre: req.params.genre}, {upsert: true}, (err, result) => {
-    if (err) return next(err);
-    if (updated) {
-    res.json({updated: result.nModified});
-  }else {
-    return res.status(500).send('did not add');
-  }
-  });
+app.get('/api/v1/delete/:title', (req,res, next) => {
+    Record.remove({"title":req.params.title }, (err, result) => {
+        if (err) return next(err);
+        // return # of items deleted
+        res.json({"deleted": result.result.n});
+    });
 });
-*/
+
 
 
 
