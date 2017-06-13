@@ -6,7 +6,8 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var records = require('./lib/records');
 var Record = require("./models/Record");
-app.use('/api', require('cors')());
+app.use(bodyParser.json());
+app.use('/api', require("cors")());
 
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public')); // set location for static files
@@ -29,7 +30,7 @@ app.get('/', (req,res) => {
     Record.find((err,records) => {
       
         if (err) return next(err);
-        res.render('home', {records: JSON.stringify(records)});    
+        res.render('master', {records: JSON.stringify(records)});    
     });
 });
 
@@ -95,7 +96,10 @@ app.get('/api/v1/record/:title', (req,res,next) => {
   
   Record.findOne({title: title}, (err, result) => {
     if (err || !result) return next(err);
+       
       res.json(result);
+
+
   });
 });
 
@@ -121,8 +125,29 @@ app.get('/api/v1/add/:title/:artist/:genre', (req,res, next) => {
       });
 });
 
-app.get('/api/v1/delete/:title', (req,res, next) => {
-    Record.remove({"title":req.params.title }, (err, result) => {
+//api post add
+app.post('/api/v1/add/', (req,res, next) => {
+    // find & update existing item, or add new 
+    if (!req.body._id) { // insert new document
+        let record = new Record({title:req.body.title,artist:req.body.artist,genre:req.body.genre});
+        record.save((err,newRecord) => {
+            if (err) return next(err);
+            console.log(newRecord)
+            res.json({updated: 0, _id: newRecord._id});
+        });
+    } else { // update existing document
+        Record.updateOne({ _id: req.body._id}, {title:req.body.title, artist: req.body.artist, genre: req.body.genre }, (err, result) => {
+            if (err) return next(err);
+            res.json({updated: result.nModified, _id: req.body._id});
+        });
+    }
+});
+
+
+
+
+app.get('/api/v1/delete/:id', (req,res, next) => {
+    Record.remove({"_id":req.params.id }, (err, result) => {
         if (err) return next(err);
         // return # of items deleted
         res.json({"deleted": result.result.n});
